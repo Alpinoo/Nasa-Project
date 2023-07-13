@@ -20,6 +20,12 @@ app.use(express.json())
 //?Now, port 8000 can be used either by front or back (when running from server folder)
 app.use(express.static(path.join(__dirname,'..','public'))) //we use this for public folder and server uses the same port
 
+//!Due to we took public from frontend, it won't be routed automatically. We have to tell to go to index.html
+//?If previous routes didn't work, send the index.html file
+app.get('/*',(req,res)=>{
+    res.sendFile(path.join(__dirname,'..','public','index.html'))
+})
+
 app.use(planetsRouter)
 app.use(launchesRouter)
 

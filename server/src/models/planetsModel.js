@@ -36,9 +36,12 @@ const run = new Promise((resolve,reject)=>{
 
 })
 
+const getPlanets = ()=>{
+  return habitablePlanets
+}
 
 
 module.exports = {
     run,
-    planets: habitablePlanets // export habitablePlanets as planets
+    getPlanets 
 }

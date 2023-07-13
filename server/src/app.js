@@ -1,6 +1,7 @@
 const path = require('path')
 const express = require('express')
 const planetsRouter = require('./routes/planets/planetsRouter')
+const launchesRouter = require('./routes/launches/launchesRouter')
 const cors = require('cors')
 const morgan = require('morgan')
 
@@ -20,5 +21,6 @@ app.use(express.json())
 app.use(express.static(path.join(__dirname,'..','public'))) //we use this for public folder and server uses the same port
 
 app.use(planetsRouter)
+app.use(launchesRouter)
 
 module.exports = app

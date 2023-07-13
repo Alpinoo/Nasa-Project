@@ -23,8 +23,8 @@ app.use(express.static(path.join(__dirname,'..','public'))) //we use this for pu
 //!Due to we took public from frontend, it won't be routed automatically. We have to tell to go to index.html
 //?If previous routes didn't work, send the index.html file
 
-app.use(planetsRouter)
-app.use(launchesRouter)
+app.use('/planets',planetsRouter)
+app.use('/launches',launchesRouter)
 
 app.get('/*',(req,res)=>{
     res.sendFile(path.join(__dirname,'..','public','index.html'))

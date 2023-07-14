@@ -3,8 +3,6 @@ const launches = new Map()
 
 let latestFlightNumber = 100;
 
-
-
 const launch = {
     flightNumber : 100,
     mission: 'Hello There',
@@ -33,7 +31,21 @@ const createLaunch = (launch)=>{
     return launch
 }
 
+const checkLaunch = (id)=>{
+    return launches.has(id)
+}
+
+const deleteLaunch = (id) => {
+    const aborted = launches.get(id)
+    aborted.success = false,
+    aborted.upcoming = false 
+    return aborted
+}
+
+
 module.exports = {
     getLaunches,
-    createLaunch
+    createLaunch,
+    checkLaunch,
+    deleteLaunch
 }

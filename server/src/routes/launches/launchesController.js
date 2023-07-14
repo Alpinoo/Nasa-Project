@@ -1,4 +1,4 @@
-const {getLaunches,createLaunch} = require('../../models/launcesModel')
+const {getLaunches,createLaunch,checkLaunch,deleteLaunch} = require('../../models/launcesModel')
 
 const getAllLaunches = (req,res)=>{
     return res.json(getLaunches())
@@ -21,4 +21,18 @@ const addLaunch = (req,res)=>{
     return res.status(201).json(createdLaunch)
 }
 
-module.exports ={ getAllLaunches,addLaunch}
+const abortLaunch = (req,res)=>{
+    const launchId = Number(req.params.id) //converted it because in req.params, it's a string but we want it as number because defined in object as number
+    const aborted = deleteLaunch(launchId)
+    
+    //if exists -> delete it
+    if(checkLaunch(launchId)){
+        return res.status(200).json({aborted})
+    }else{
+        return res.status(404).json({
+            error: 'Launch cannot found'
+        })
+    }
+}
+
+module.exports ={ getAllLaunches,addLaunch, abortLaunch}

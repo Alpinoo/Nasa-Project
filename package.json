@@ -5,15 +5,16 @@
   "main": "index.js",
   "scripts": {
     "server": "npm run start --prefix server",
-    "client":"npm run start --prefix client",
-    "watch":"npm run server & npm run client",
+    "client": "npm run start --prefix client",
+    "watch": "npm run server & npm run client",
     "install-server": "npm install --prefix server",
     "install-client": "npm install --prefix client",
     "install": "npm run install-server && npm run install-client ",
     "test": "npm run test --prefix server && npm run test --prefix client",
-    "deploy":"npm run build --prefix client && npm run start --prefix server"
+    "deploy": "npm run build --prefix client && npm run start --prefix server"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "packageManager": "yarn@3.6.1"
 }

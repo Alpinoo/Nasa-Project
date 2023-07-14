@@ -6,7 +6,7 @@ const getAllLaunches = (req,res)=>{
 
 const addLaunch = (req,res)=>{
     const launch = req.body
-    if(!launch.launchDate || !launch.mission || !launch.rocket || !launch.destination){
+    if(!launch.launchDate || !launch.mission || !launch.rocket || !launch.target){
         return res.status(400).json({
             error: 'Some of the required fields are missing'
         })

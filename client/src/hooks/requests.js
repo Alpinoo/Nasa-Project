@@ -15,9 +15,20 @@ async function httpGetLaunches() {
   })
 }
 
+// Submit given launch data to launch system.
 async function httpSubmitLaunch(launch) {
-  // TODO: Once API is ready.
-  // Submit given launch data to launch system.
+  try {
+    return await fetch(`${API_URL}/launches`,{
+      'method':'post',//fetch defaults to get. So, we explicity have to define post
+      'headers':{
+        "Content-Type":'application/json',  
+      }
+        ,//due to we're sending json, we have to set header for it.
+      'body': JSON.stringify(launch)//fetch doesn't accept object. So, we have to stringify it before sending
+    })
+  } catch (err) {
+      return {ok:false}//in useLaunches, there's response.ok and we set ok to false to determine that response is not correctly sent.
+  }
 }
 
 async function httpAbortLaunch(id) {

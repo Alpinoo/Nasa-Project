@@ -27,6 +27,14 @@ describe('POST /launches',()=>{
 
     }
 
+    const wrongDateLaunch = {
+        mission: 'Starz',
+        rocket: 'MicroIce',
+        target: 'Mars',
+        launchDate: 'Hello there',
+
+    }
+
     test('Should return 201 created',async ()=>{
         const response = await request(app)
         .post('/launches')
@@ -44,9 +52,27 @@ describe('POST /launches',()=>{
 
     })
 
-    test('Should catch missing required properties',()=>{})
+    test('Should catch missing required properties',async()=>{
+        const response = await request(app)
+        .post('/launches')
+        .send(launchDataWithoutDate)
+        .expect(400) //bad request
 
-    test('Should catch invalid date',()=>{})
+        expect(response.body).toStrictEqual({
+            error: 'Some of the required fields are missing' //from launchesController
+        })
+    })
+
+    test('Should catch invalid date',async()=>{
+        const response = await request(app)
+        .post('/launches')
+        .send(wrongDateLaunch)
+        .expect(400)
+
+        expect(response.body).toStrictEqual({
+            error: 'Invalid date'
+        })
+    })
 
 })
 

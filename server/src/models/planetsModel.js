@@ -27,10 +27,6 @@ const run = new Promise((resolve,reject)=>{
         reject(err) //if there's an error, exit with reject
       })
       .on('end', () => {
-        console.log(habitablePlanets.map((planet) => {
-          return planet['kepler_name'];
-        }));
-        console.log(`${habitablePlanets.length} habitable planets found!`);
         resolve() // when it's done, resolve() to fulfill the promise
       });
 

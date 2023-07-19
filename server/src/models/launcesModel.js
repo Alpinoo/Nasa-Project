@@ -1,3 +1,5 @@
+//!Now, we have more than one cluster. It means that when we create a new launches map, it'll be created only for that cluster. So, when 
+//!there's another operation (ex:get launches) in another cluster, we can't reach to the cluster's data which launch was created. we should use database. 
 //?we used map because it's flexible to change and update.
 const launches = new Map()
 

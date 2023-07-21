@@ -6,3 +6,6 @@ const planetsSchema = new mongoose.Schema({
         required:true
     }
 })
+
+//*mongoose will first lowercase the name, make it plural and create model 'planets'.
+module.exports = mongoose.model('Planet',planetsSchema)

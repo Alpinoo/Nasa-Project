@@ -38,7 +38,10 @@ const run = new Promise((resolve,reject)=>{
 })
 
 const getPlanets = async ()=>{
-  return await planets.find() //if we want to exclude a field, planets.find({}, '-excludedField')
+  return await planets.find({},{
+    '_id':0,
+    '__v':0
+  }) //if we want to exclude a field, planets.find({}, '-excludedField')
 }
 
 const savePlanets = async (planet)=>{

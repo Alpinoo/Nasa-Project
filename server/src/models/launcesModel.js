@@ -81,7 +81,7 @@ const deleteLaunch = async (id) => {
         upcoming:false 
     })
 
-    return aborted.modifiedCount //we did this because it's one of the responses that came from updateOne json. It's more elegant.
+    return aborted.modifiedCount ===1  //we did this because it's one of the responses that came from updateOne json. It's more elegant.
 }
 
 

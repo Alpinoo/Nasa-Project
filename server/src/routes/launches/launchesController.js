@@ -1,10 +1,10 @@
-const {getLaunches,createLaunch,checkLaunch,deleteLaunch} = require('../../models/launcesModel')
+const {getLaunches,scheduleLaunch,checkLaunch,deleteLaunch} = require('../../models/launcesModel')
 
 const getAllLaunches = async (req,res)=>{
     return res.status(200).json(await getLaunches())
 }
 
-const addLaunch = (req,res)=>{
+const addLaunch = async(req,res)=>{
     const launch = req.body
     if(!launch.launchDate || !launch.mission || !launch.rocket || !launch.target){
         return res.status(400).json({
@@ -17,8 +17,8 @@ const addLaunch = (req,res)=>{
             error: 'Invalid date'
         })
     }
-    const createdLaunch = createLaunch(launch)
-    return res.status(201).json(createdLaunch)
+    await scheduleLaunch(launch)
+    return res.status(201).json(launch)
 }
 
 const abortLaunch = (req,res)=>{

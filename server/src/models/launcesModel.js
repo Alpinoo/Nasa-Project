@@ -8,11 +8,13 @@ const launches = new Map()
 
 let latestFlightNumber = 100;
 
+const DEFAULT_FLIGHT_NUMBER = 100
+
 const launch = {
     flightNumber : 100,
     mission: 'Hello There',
     rocket: 'Star Citizen',
-    target: 'Moodn',
+    target: 'Kepler-62 f',
     launchDate: new Date('28 January 2030'),
     customers: ['Alpino', 'Kenobi'],
     success:true,
@@ -31,14 +33,22 @@ const getLaunches = async ()=>{
     // return Array.from(launches.values())//maps cannot converted to json. First, we have to convert to array so that it can be converted to json
     //?also added .values() for iterating over values.
 }
-const createLaunch = (launch)=>{
-    latestFlightNumber++
-    launch.flightNumber = latestFlightNumber
-    launch.customers = ['Kenobi', 'Skywalker'] 
-    launch.success = true
+const scheduleLaunch = async (launch)=>{
+    const flightNum = await getLatestFlightNumber() + 1
+    launch.flightNumber = flightNum 
+    launch.success = true,
     launch.upcoming = true
-    launches.set(launch.flightNumber,launch)
-    return launch
+    await saveLaunch(launch)
+}
+
+const getLatestFlightNumber = async()=>{ //sort documents and take the latest flight number accordingly
+    const latestFlight = await launchesDB.findOne().sort('-flightNumber')
+
+    if(!latestFlight){
+        return DEFAULT_FLIGHT_NUMBER
+    }
+
+    return latestFlight.flightNumber
 }
 
 const saveLaunch = async (launch)=>{ //*find the flightNumber of the launch and update it with the launch object. If there's not, create it.
@@ -54,7 +64,6 @@ const saveLaunch = async (launch)=>{ //*find the flightNumber of the launch and 
         upsert: true
     })
 }
-
 saveLaunch(launch)
 
 const checkLaunch = (id)=>{
@@ -71,7 +80,7 @@ const deleteLaunch = (id) => {
 
 module.exports = {
     getLaunches,
-    createLaunch,
+    scheduleLaunch,
     checkLaunch,
     deleteLaunch
 }

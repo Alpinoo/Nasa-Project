@@ -2,6 +2,8 @@ const fs = require('fs');
 const path = require('path')
 const {parse} = require('csv-parse');
 
+const planets = require('./planetsSchema')
+
 const habitablePlanets = [];
 
 function isHabitablePlanet(planet) {
@@ -17,9 +19,11 @@ const run = new Promise((resolve,reject)=>{
         comment: '#',
         columns: true,
       }))
-      .on('data', (data) => {
+      .on('data', async(data) => {
         if (isHabitablePlanet(data)) {
-          habitablePlanets.push(data);
+          await planets.create({ //!this is not ideal because whenever we restart the server, planets will be created again and again. We should use update + insert = upsert
+            keplerName: data.keplerName
+          })
         }
       })
       .on('error', (err) => {

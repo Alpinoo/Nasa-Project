@@ -1,6 +1,7 @@
 //!Now, we have more than one cluster. It means that when we create a new launches map, it'll be created only for that cluster. So, when 
 //!there's another operation (ex:get launches) in another cluster, we can't reach to the cluster's data which launch was created. we should use database. 
 const launchesDB =require('./launchesSchema')
+const planetsDB = require('./planetsSchema')
 
 //?we used map because it's flexible to change and update.
 const launches = new Map()
@@ -11,7 +12,7 @@ const launch = {
     flightNumber : 100,
     mission: 'Hello There',
     rocket: 'Star Citizen',
-    target: 'Moon',
+    target: 'Moodn',
     launchDate: new Date('28 January 2030'),
     customers: ['Alpino', 'Kenobi'],
     success:true,
@@ -41,6 +42,12 @@ const createLaunch = (launch)=>{
 }
 
 const saveLaunch = async (launch)=>{ //*find the flightNumber of the launch and update it with the launch object. If there's not, create it.
+    const planets = await planetsDB.findOne({ //check if planet name exists on the planets database
+        keplerName: launch.target
+    })
+    if(!planets){
+        throw new Error('Planet name is not in the list of planets')
+    }
     await launchesDB.updateOne({
         flightNumber:launch.flightNumber
     },launch,{

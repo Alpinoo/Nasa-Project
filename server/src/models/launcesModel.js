@@ -58,7 +58,7 @@ const saveLaunch = async (launch)=>{ //*find the flightNumber of the launch and 
     if(!planets){
         throw new Error('Planet name is not in the list of planets')
     }
-    await launchesDB.updateOne({
+    await launchesDB.findOneAndUpdate({//we changed this from updateOne because it sends setOnInsert propery as response
         flightNumber:launch.flightNumber
     },launch,{
         upsert: true

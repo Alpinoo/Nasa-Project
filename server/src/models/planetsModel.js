@@ -21,9 +21,10 @@ const run = new Promise((resolve,reject)=>{
       }))
       .on('data', async(data) => {
         if (isHabitablePlanet(data)) {
-          await planets.create({ //!this is not ideal because whenever we restart the server, planets will be created again and again. We should use update + insert = upsert
-            keplerName: data.keplerName
-          })
+          // await planets.create({ //!this is not ideal because whenever we restart the server, planets will be created again and again. We should use update + insert = upsert
+          //   keplerName: data.keplerName
+          // })
+          savePlanets(data)
         }
       })
       .on('error', (err) => {
@@ -38,6 +39,17 @@ const run = new Promise((resolve,reject)=>{
 
 const getPlanets = async ()=>{
   return await planets.find() //if we want to exclude a field, planets.find({}, '-excludedField')
+}
+
+const savePlanets = async (planet)=>{
+  //*
+  await planets.updateOne({
+    keplerName: planet.keplerName //this is what should mongoose look for (filter)
+  },{
+    keplerName: planet.keplerName //what should mongoose update
+  },{
+    upsert: true //if there's no document found, add that to database
+  })
 }
 
 

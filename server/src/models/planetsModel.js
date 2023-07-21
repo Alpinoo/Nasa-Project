@@ -36,8 +36,8 @@ const run = new Promise((resolve,reject)=>{
 
 })
 
-const getPlanets = ()=>{
-  return habitablePlanets
+const getPlanets = async ()=>{
+  return await planets.find() //if we want to exclude a field, planets.find({}, '-excludedField')
 }
 
 

@@ -66,15 +66,22 @@ const saveLaunch = async (launch)=>{ //*find the flightNumber of the launch and 
 }
 saveLaunch(launch)
 
-const checkLaunch = (id)=>{
-    return launches.has(id)
+const checkLaunch = async(id)=>{
+    return await launchesDB.findOne({
+        flightNumber:id
+    })
+
 }
 
-const deleteLaunch = (id) => {
-    const aborted = launches.get(id)
-    aborted.success = false,
-    aborted.upcoming = false 
-    return aborted
+const deleteLaunch = async (id) => {
+    const aborted = await launchesDB.updateOne({
+        flightNumber:id
+    },{
+        success:false,
+        upcoming:false 
+    })
+
+    return aborted.modifiedCount //we did this because it's one of the responses that came from updateOne json. It's more elegant.
 }
 
 

@@ -21,18 +21,25 @@ const addLaunch = async(req,res)=>{
     return res.status(201).json(launch)
 }
 
-const abortLaunch = (req,res)=>{
+const abortLaunch = async (req,res)=>{
     const launchId = Number(req.params.id) //converted it because in req.params, it's a string but we want it as number because defined in object as number
-    const aborted = deleteLaunch(launchId)
     
+    const existLaunch = await checkLaunch(launchId)
     //if exists -> delete it
-    if(checkLaunch(launchId)){
-        return res.status(200).json({aborted})
-    }else{
+    if(!existLaunch){
         return res.status(404).json({
             error: 'Launch cannot found'
         })
     }
+    const aborted = await deleteLaunch(launchId)
+    if(!aborted){
+        res.status(400).json({
+            error: 'Cannot abort the launch'
+        })
+    }
+    return res.status(200).json({
+        "ok": true
+    })
 }
 
 module.exports ={ getAllLaunches,addLaunch, abortLaunch}

@@ -28,6 +28,8 @@ launches.set(launch.flightNumber,launch)
 const SPACEX_URL = 'https://api.spacexdata.com/v4/launches/query'
 
 const populateLaunch = async ()=>{
+
+    console.log('Launches downloading...');
     const response = await axios.post(SPACEX_URL,{ //we're getting launches data from spaceX. There's no get query route so, we use post to use queries or populate
         query:{},
         options:{
@@ -49,6 +51,11 @@ const populateLaunch = async ()=>{
         }   
     })
 
+    if(response.status !== 200){
+        console.log(`There's a problem while downloading data from SpaceX`);
+        throw new Error('Problem while downloading')
+    }
+
     const launchDocs = response.data.docs
     for(const launchDoc of launchDocs){
         const payloads = launchDoc.payloads
@@ -65,6 +72,7 @@ const populateLaunch = async ()=>{
             upcoming: launchDoc.upcoming
         }
         console.log(`${launch.flightNumber} ${launch.customers}`);
+        await saveLaunch(launch)
     }
 
 }
@@ -72,9 +80,15 @@ const populateLaunch = async ()=>{
 const loadLaunch = async ()=>{
     const firstLaunch = await findLaunch({
         flightNumber:1,
-        mission:'FalconSat'
+        mission:'FalconSat',
+        rocket: 'Falcon 1'
     })
-    await populateLaunch()
+    console.log(firstLaunch);
+    if(firstLaunch){
+        console.log('First launch already downloaded');
+    }else{
+        await populateLaunch()
+    }
 }
 
 const getLaunches = async ()=>{
@@ -87,6 +101,13 @@ const getLaunches = async ()=>{
     //?also added .values() for iterating over values.
 }
 const scheduleLaunch = async (launch)=>{
+    const planets = await planetsDB.findOne({ //check if planet name exists on the planets database
+        keplerName: launch.target
+    })
+    if(!planets){
+        throw new Error('Planet name is not in the list of planets')
+    }
+    
     const flightNum = await getLatestFlightNumber() + 1
     launch.flightNumber = flightNum 
     launch.success = true,
@@ -105,12 +126,6 @@ const getLatestFlightNumber = async()=>{ //sort documents and take the latest fl
 }
 
 const saveLaunch = async (launch)=>{ //*find the flightNumber of the launch and update it with the launch object. If there's not, create it.
-    const planets = await planetsDB.findOne({ //check if planet name exists on the planets database
-        keplerName: launch.target
-    })
-    if(!planets){
-        throw new Error('Planet name is not in the list of planets')
-    }
     await launchesDB.findOneAndUpdate({//we changed this from updateOne because it sends setOnInsert propery as response
         flightNumber:launch.flightNumber
     },launch,{

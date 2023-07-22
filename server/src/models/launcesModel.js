@@ -31,6 +31,7 @@ const loadLaunch = async ()=>{
     const response = await axios.post(SPACEX_URL,{ //we're getting launches data from spaceX. There's no get query route so, we use post to use queries or populate
         query:{},
         options:{
+            pagination: false, //spacex limits the number of docs per page to 10 but we need all the data
             populate:[
                 {
                     path: 'rocket',

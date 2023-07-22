@@ -12,19 +12,6 @@ let latestFlightNumber = 100;
 
 const DEFAULT_FLIGHT_NUMBER = 100
 
-const launch = {
-    flightNumber : 100, //flight_number
-    mission: 'Hello There', //name
-    rocket: 'Star Citizen', //rocket.name
-    target: 'Kepler-62 f', //not applicable
-    launchDate: new Date('28 January 2030'),//date_local
-    customers: ['Alpino', 'Kenobi'], //payload.customers
-    success:true, //same
-    upcoming: true//same
-}
-
-//?For setting launches. Used flightNumber as text because it's unique
-launches.set(launch.flightNumber,launch)
 
 const SPACEX_URL = 'https://api.spacexdata.com/v4/launches/query'
 
@@ -72,7 +59,6 @@ const populateLaunch = async ()=>{
             success:launchDoc.success, 
             upcoming: launchDoc.upcoming
         }
-        console.log(`${launch.flightNumber} ${launch.customers}`);
         await saveLaunch(launch)
     }
 
@@ -84,7 +70,6 @@ const loadLaunch = async ()=>{
         mission:'FalconSat',
         rocket: 'Falcon 1'
     })
-    console.log(firstLaunch);
     if(firstLaunch){
         console.log('First launch already downloaded');
     }else{
@@ -133,7 +118,6 @@ const saveLaunch = async (launch)=>{ //*find the flightNumber of the launch and 
         upsert: true
     })
 }
-saveLaunch(launch)
 
 const findLaunch = async (filter)=>{
     return await launchesDB.findOne(filter)

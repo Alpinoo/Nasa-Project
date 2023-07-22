@@ -2,6 +2,7 @@
 //!there's another operation (ex:get launches) in another cluster, we can't reach to the cluster's data which launch was created. we should use database. 
 const launchesDB =require('./launchesSchema')
 const planetsDB = require('./planetsSchema')
+const {getPagination} = require('../../services/query')
 const axios = require('axios')
 
 //?we used map because it's flexible to change and update.
@@ -91,11 +92,12 @@ const loadLaunch = async ()=>{
     }
 }
 
-const getLaunches = async ()=>{
+const getLaunches = async (query)=>{
+    const {limit,skip} = getPagination(query)
     return await launchesDB.find({},{
         '__v':0,
         '_id':0
-    })
+    }).limit(limit).skip(skip)
 
     // return Array.from(launches.values())//maps cannot converted to json. First, we have to convert to array so that it can be converted to json
     //?also added .values() for iterating over values.
@@ -107,7 +109,6 @@ const scheduleLaunch = async (launch)=>{
     if(!planets){
         throw new Error('Planet name is not in the list of planets')
     }
-    
     const flightNum = await getLatestFlightNumber() + 1
     launch.flightNumber = flightNum 
     launch.success = true,

@@ -1,7 +1,8 @@
 const {getLaunches,scheduleLaunch,checkLaunch,deleteLaunch} = require('../../models/launcesModel')
 
 const getAllLaunches = async (req,res)=>{
-    return res.status(200).json(await getLaunches())
+    const launches = await getLaunches(req.query)
+    return res.status(200).json(launches)
 }
 
 const addLaunch = async(req,res)=>{

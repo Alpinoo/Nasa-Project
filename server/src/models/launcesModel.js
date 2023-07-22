@@ -27,7 +27,7 @@ launches.set(launch.flightNumber,launch)
 
 const SPACEX_URL = 'https://api.spacexdata.com/v4/launches/query'
 
-const loadLaunch = async ()=>{
+const populateLaunch = async ()=>{
     const response = await axios.post(SPACEX_URL,{ //we're getting launches data from spaceX. There's no get query route so, we use post to use queries or populate
         query:{},
         options:{
@@ -67,6 +67,14 @@ const loadLaunch = async ()=>{
         console.log(`${launch.flightNumber} ${launch.customers}`);
     }
 
+}
+
+const loadLaunch = async ()=>{
+    const firstLaunch = await findLaunch({
+        flightNumber:1,
+        mission:'FalconSat'
+    })
+    await populateLaunch()
 }
 
 const getLaunches = async ()=>{
@@ -111,8 +119,12 @@ const saveLaunch = async (launch)=>{ //*find the flightNumber of the launch and 
 }
 saveLaunch(launch)
 
+const findLaunch = async (filter)=>{
+    return await launchesDB.findOne(filter)
+}
+
 const checkLaunch = async(id)=>{
-    return await launchesDB.findOne({
+    return await findLaunch({
         flightNumber:id
     })
 

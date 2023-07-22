@@ -2,6 +2,7 @@
 //!there's another operation (ex:get launches) in another cluster, we can't reach to the cluster's data which launch was created. we should use database. 
 const launchesDB =require('./launchesSchema')
 const planetsDB = require('./planetsSchema')
+const axios = require('axios')
 
 //?we used map because it's flexible to change and update.
 const launches = new Map()
@@ -11,18 +12,61 @@ let latestFlightNumber = 100;
 const DEFAULT_FLIGHT_NUMBER = 100
 
 const launch = {
-    flightNumber : 100,
-    mission: 'Hello There',
-    rocket: 'Star Citizen',
-    target: 'Kepler-62 f',
-    launchDate: new Date('28 January 2030'),
-    customers: ['Alpino', 'Kenobi'],
-    success:true,
-    upcoming: true
+    flightNumber : 100, //flight_number
+    mission: 'Hello There', //name
+    rocket: 'Star Citizen', //rocket.name
+    target: 'Kepler-62 f', //not applicable
+    launchDate: new Date('28 January 2030'),//date_local
+    customers: ['Alpino', 'Kenobi'], //payload.customers
+    success:true, //same
+    upcoming: true//same
 }
 
 //?For setting launches. Used flightNumber as text because it's unique
 launches.set(launch.flightNumber,launch)
+
+const SPACEX_URL = 'https://api.spacexdata.com/v4/launches/query'
+
+const loadLaunch = async ()=>{
+    const response = await axios.post(SPACEX_URL,{ //we're getting launches data from spaceX. There's no get query route so, we use post to use queries or populate
+        query:{},
+        options:{
+            populate:[
+                {
+                    path: 'rocket',
+                    select:{
+                        name: 1
+                    }
+                },
+                {
+                    path: 'payloads',
+                    select:{
+                        customers: 1
+                    }
+                }
+            ]
+        }   
+    })
+
+    const launchDocs = response.data.docs
+    for(const launchDoc of launchDocs){
+        const payloads = launchDoc.payloads
+        const customers = payloads.flatMap((payload)=>{//payload.customers is an array of arrays. So, we flatMap it and create one array with customers
+            return payload.customers
+        })
+        const launch = {
+            flightNumber: launchDoc.flight_number,
+            mission: launchDoc.name, 
+            rocket: launchDoc.rocket.name, 
+            launchDate: launchDoc.date_local,
+            customers, 
+            success:launchDoc.success, 
+            upcoming: launchDoc.upcoming
+        }
+        console.log(`${launch.flightNumber} ${launch.customers}`);
+    }
+
+}
 
 const getLaunches = async ()=>{
     return await launchesDB.find({},{
@@ -86,6 +130,7 @@ const deleteLaunch = async (id) => {
 
 
 module.exports = {
+    loadLaunch,
     getLaunches,
     scheduleLaunch,
     checkLaunch,

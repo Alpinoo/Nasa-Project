@@ -1,9 +1,9 @@
 const path = require('path')
 const express = require('express')
-const planetsRouter = require('./routes/planets/planetsRouter')
-const launchesRouter = require('./routes/launches/launchesRouter')
+
 const cors = require('cors')
 const morgan = require('morgan')
+const api = require('./routes/api')
 
 
 const app = express()
@@ -23,8 +23,7 @@ app.use(express.static(path.join(__dirname,'..','public'))) //we use this for pu
 //!Due to we took public from frontend, it won't be routed automatically. We have to tell to go to index.html
 //?If previous routes didn't work, send the index.html file
 
-app.use('/planets',planetsRouter)
-app.use('/launches',launchesRouter)
+app.use('/v1',api) //it'll start with localhost/v1/...
 
 app.get('/*',(req,res)=>{
     res.sendFile(path.join(__dirname,'..','public','index.html'))

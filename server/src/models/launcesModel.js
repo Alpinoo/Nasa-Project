@@ -97,7 +97,7 @@ const getLaunches = async (query)=>{
     return await launchesDB.find({},{
         '__v':0,
         '_id':0
-    }).limit(limit).skip(skip)
+    }).sort({flightNumber:1}).limit(limit).skip(skip)
 
     // return Array.from(launches.values())//maps cannot converted to json. First, we have to convert to array so that it can be converted to json
     //?also added .values() for iterating over values.

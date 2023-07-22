@@ -14,7 +14,7 @@ describe('Launches API',()=>{ //we move them into one block because we have to s
     describe('GET /launches',()=>{
         test('Should return 200 success',async()=>{
             const response = await request(app)
-            .get('/launches')
+            .get('/v1/launches')
             .expect('Content-type',/json/) //check if content type is json
             .expect(200)
         })
@@ -47,7 +47,7 @@ describe('Launches API',()=>{ //we move them into one block because we have to s
     
         test('Should return 201 created',async ()=>{
             const response = await request(app)
-            .post('/launches')
+            .post('/v1/launches')
             .send(completedLaunchData)
             .expect(201)
     
@@ -64,7 +64,7 @@ describe('Launches API',()=>{ //we move them into one block because we have to s
     
         test('Should catch missing required properties',async()=>{
             const response = await request(app)
-            .post('/launches')
+            .post('/v1/launches')
             .send(launchDataWithoutDate)
             .expect(400) //bad request
     
@@ -75,7 +75,7 @@ describe('Launches API',()=>{ //we move them into one block because we have to s
     
         test('Should catch invalid date',async()=>{
             const response = await request(app)
-            .post('/launches')
+            .post('/v1/launches')
             .send(wrongDateLaunch)
             .expect(400)
     

@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
 
-const MONGO_URL = 'mongodb+srv://alporal97:a6pYupPKKoBiZ2iK@nasaproject.g3vsjs4.mongodb.net/?retryWrites=true&w=majority'
+require('dotenv').config();//for tests to recognize mongo's url
+
+const MONGO_URL = process.env.MONGO_URL
 
 
 mongoose.connection.once('open',()=>{ //once means that this will be triggered only one time

@@ -3,6 +3,8 @@ const PORT = process.env.PORT || 8000
 const app = require('./app')
 const {mongoConnect} = require('../services/mongoDB')
 
+require('dotenv').config()// for setting dotenv
+
 const {loadLaunch} = require('./models/launcesModel')
 const {loadPlanets} = require('./models/planetsModel')
 

@@ -1,0 +1,25 @@
+name: Nasa Project CI
+#when and where should these actions triggered?
+on: 
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+#what should actions do?
+jobs:
+  build:
+    #which os should this run?
+    runs-on: ubuntu@latest
+    #what should it do?
+    steps:
+      #use it when it's checkout.v2 is the version of that action
+      - uses: actions/checkout@v2
+      - name: Use Node.js version 18
+        uses: actions/setup-node@v2
+        #use it with node version 18
+        with: 
+          node-version: '18'
+      #run npm i to install dependencies
+      - run: npm i
+      #run npm i on client to install frontend dependencies(script is from frontend's package.json)
+      - run: npm run build --prefix client

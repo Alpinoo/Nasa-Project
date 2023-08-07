@@ -8,18 +8,30 @@ on:
 #what should actions do?
 jobs:
   build:
+    #in which environment should the code run. We can add PORT etc
+    env:
+      #when run npm test on frontend, it automatically runs in watch mode. With CI:true, we tell react that we're running it on CI server
+      CI: true
+      #specify which conditions should test done in 
+      strategy:
+        #multiple variable inputs
+        matrix:
+          #run node in these versions. x-> run latest patch of that version
+          node-version: [14.x,16.x,18.x,20.x]  
+        
     #which os should this run?
     runs-on: ubuntu-latest
     #what should it do?
     steps:
       #use it when it's checkout.v2 is the version of that action
       - uses: actions/checkout@v3.5.3
-      - name: Use Node.js version 18
+      - name: Use Node.js version ${{matrix.node-version}}
         uses: actions/setup-node@v3.7.0
         #use it with node version 18
         with: 
-          node-version: '18'
+          node-version: ${{matrix.node-version}}
       #run npm i to install dependencies
       - run: npm i
       #run npm i on client to install frontend dependencies(script is from frontend's package.json)
       - run: npm run build --prefix client
+      - run: npm run test

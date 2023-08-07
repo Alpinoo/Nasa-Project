@@ -21,7 +21,7 @@ jobs:
         #run node in these versions. x-> run latest patch of that version
         node-version: [14.x,16.x,18.x,20.x] 
         #use these versions of mongodb
-        mongodb-version: [4.4,6.0]  
+        mongodb-version: ['4.4','6.0']  
     #which os should this run?
     runs-on: ubuntu-latest
     #what should it do?

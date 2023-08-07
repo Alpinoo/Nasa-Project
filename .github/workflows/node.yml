@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     #which os should this run?
-    runs-on: ubuntu@latest
+    runs-on: ubuntu-latest
     #what should it do?
     steps:
       #use it when it's checkout.v2 is the version of that action

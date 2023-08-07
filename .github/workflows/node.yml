@@ -12,12 +12,16 @@ jobs:
     env:
       #when run npm test on frontend, it automatically runs in watch mode. With CI:true, we tell react that we're running it on CI server
       CI: true
+      #we defined mongodb url in .env file but CI server doesn't have access for that. So, we create a new database for test to work
+      MONGO_URL: mongodb://localhost/nasa
       #specify which conditions should test done in 
     strategy:
       #multiple variable inputs
       matrix:
         #run node in these versions. x-> run latest patch of that version
-        node-version: [14.x,16.x,18.x,20.x]   
+        node-version: [14.x,16.x,18.x,20.x] 
+        #use these versions of mongodb
+        mongodb-version: [4.4,6.0]  
     #which os should this run?
     runs-on: ubuntu-latest
     #what should it do?
@@ -30,6 +34,9 @@ jobs:
         with: 
           node-version: ${{matrix.node-version}}
       #run npm i to install dependencies
+      - name: MongoDB in GitHub Actions
+        uses: supercharge/mongodb-github-action@v1.10.0
+        with: ${{matrix.mongodb-version}}
       - run: npm i
       #run npm i on client to install frontend dependencies(script is from frontend's package.json)
       - run: npm run build --prefix client

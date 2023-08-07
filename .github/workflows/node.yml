@@ -17,8 +17,7 @@ jobs:
         #multiple variable inputs
         matrix:
           #run node in these versions. x-> run latest patch of that version
-          node-version: [14.x,16.x,18.x,20.x]  
-        
+          node-version: [14.x,16.x,18.x,20.x]   
     #which os should this run?
     runs-on: ubuntu-latest
     #what should it do?
